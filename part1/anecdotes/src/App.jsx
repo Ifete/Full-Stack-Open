@@ -1,9 +1,18 @@
 import { useState } from 'react'
 
-const Anecdote = ({ text }) => {
+const Title = ({ text }) => {
+  return (
+    <h1>
+      {text}
+    </h1>
+  )
+}
+
+const Anecdote = ({ text, number }) => {
   return (
     <div>
       {text}
+      <p>has {number} votes</p>
     </div>
   )
 }
@@ -28,23 +37,49 @@ const App = () => {
 
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(new Uint8Array(8))
+  const [indMaxVotos, setIndMaxVotos] = useState(0)
+
+  function indexOfMax(arr) {
+    if (arr.length === 0) {
+        return -1;
+    }
+
+    var max = arr[0];
+    var maxIndex = 0;
+
+    for (var i = 1; i < arr.length; i++) {
+        if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+        }
+    }
+
+    return maxIndex;
+}
+
 
   const handleNewAnecdote = () => {
     setSelected(Math.floor(Math.random() * ((anecdotes.length - 1) - 0 + 1)) + 0)
   }
   const handlePointAnecdote = (pos) => {
     let pointCopy = [...points];
-    pointCopy[pos]+= 1
+    pointCopy[pos] += 1
     setPoints(pointCopy)
+    setIndMaxVotos(indexOfMax(pointCopy))
   }
+
+
 
   return (
     <div>
-    <Anecdote text={anecdotes[selected]}></Anecdote>
-    <p>has {points[selected]} votes</p>
-    <Button handleClick={() => handlePointAnecdote(selected)} text="Vote"></Button>
-    <Button handleClick={handleNewAnecdote} text="New anecdote"></Button>
+      <Title text="Anectode of the day"></Title>
+      <Anecdote text={anecdotes[selected]} number={points[selected]}></Anecdote>
+      <Button handleClick={() => handlePointAnecdote(selected)} text="Vote"></Button>
+      <Button handleClick={handleNewAnecdote} text="New anecdote"></Button>
 
+      <Title text="Anectode with most votes"></Title>
+
+      <Anecdote text={anecdotes[indMaxVotos]} number={points[indMaxVotos]}></Anecdote>
 
 
 
