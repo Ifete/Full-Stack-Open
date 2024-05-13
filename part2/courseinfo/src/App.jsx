@@ -5,7 +5,7 @@ const Header = (props) => {
     </h1>
   )
 }
-const Part = ({part}) => {
+const Part = ({ part }) => {
   return (
     <p>
       {part.name} {part.exercises}
@@ -30,14 +30,12 @@ const Total = (props) => {
   let initialValue = 0;
   const sumWithInitial = parts.reduce(
     (accumulator, currentValue) => {
-      if(!isNaN(accumulator.exercises)){
+      if (!isNaN(accumulator.exercises)) {
         initialValue = accumulator.exercises + currentValue.exercises + initialValue;
       }
-      if(isNaN(accumulator.exercises)){
+      if (isNaN(accumulator.exercises)) {
         initialValue = currentValue.exercises + initialValue;
       }
-
-
       console.log('acumulator', accumulator.exercises, ' currentValue', currentValue.exercises, 'initialValue', initialValue)
       return initialValue;
     });
@@ -49,7 +47,7 @@ const Total = (props) => {
 }
 
 
-const Course = ({course}) => {
+const Course = ({ course }) => {
   return (
     <>
       <Header course={course.name} />
@@ -59,29 +57,59 @@ const Course = ({course}) => {
   )
 }
 const App = () => {
-  const course = {
-    id: 1,
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10,
-        id: 1
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7,
-        id: 2
-      },
-      {
-        name: 'State of a component',
-        exercises: 14,
-        id: 3
-      }
-    ]
-  }
+  const courses = [
+    {
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
+      ]
+    },
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
 
-  return (<div><Course course={course} /></div>)
+
+  return (
+    courses.map(course =>
+      <div key={course.id}>
+      <Course course={course}/>
+      </div>
+    )
+  )
 }
 
 export default App
