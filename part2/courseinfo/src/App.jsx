@@ -18,12 +18,35 @@ const Content = (props) => {
   return (
     <div>
       {parts.map(part =>
-          <Part key={part.id} part={part} />
-        )}
+        <Part key={part.id} part={part} />
+      )}
     </div>
   )
 }
 
+const Total = (props) => {
+  const { parts } = props;
+
+  let initialValue = 0;
+  const sumWithInitial = parts.reduce(
+    (accumulator, currentValue) => {
+      if(!isNaN(accumulator.exercises)){
+        initialValue = accumulator.exercises + currentValue.exercises + initialValue;
+      }
+      if(isNaN(accumulator.exercises)){
+        initialValue = currentValue.exercises + initialValue;
+      }
+
+
+      console.log('acumulator', accumulator.exercises, ' currentValue', currentValue.exercises, 'initialValue', initialValue)
+      return initialValue;
+    });
+  return (
+    <strong >
+      total of {sumWithInitial} exercises
+    </strong>
+  )
+}
 
 
 const Course = ({course}) => {
@@ -31,6 +54,7 @@ const Course = ({course}) => {
     <>
       <Header course={course.name} />
       <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </>
   )
 }
@@ -57,7 +81,7 @@ const App = () => {
     ]
   }
 
-  return <Course course={course} />
+  return (<div><Course course={course} /></div>)
 }
 
 export default App
