@@ -7,6 +7,28 @@ const Name = ({ name }) => {
   )
 }
 
+const Filter = ({newFilter, handleFilterChange}) => {
+  return (
+    <p>filter shown with <input value={newFilter} onChange={handleFilterChange}/></p>
+  )
+}
+
+const PersonForm = ({addData, newName, handleNameChange, newPhone, handlePhoneChange}) => {
+  return (
+    <form onSubmit={addData}>
+        <div>
+          name: <input value={newName} onChange={handleNameChange} />
+        </div>
+        <div>number: <input value={newPhone} onChange={handlePhoneChange} /></div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+  )
+}
+
+
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -14,7 +36,7 @@ const App = () => {
     { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ])
-  const [filterPersons, setFilterPersons] = useState([])
+
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newFilter, setNewFilter] = useState('')
@@ -66,19 +88,20 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-    <p>filter shown with <input value={newFilter} onChange={handleFilterChange}/></p>
-      <h2>Add a new</h2>
-      <form onSubmit={addData}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>number: <input value={newPhone} onChange={handlePhoneChange} /></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter newFilter= {newFilter} handleFilterChange={handleFilterChange}/>
 
-      <h2>Numbers</h2>
+      <h3>Add a new</h3>
+
+      <PersonForm
+        addData = {addData}
+        newName = {newName}
+        handleNameChange = {handleNameChange}
+        newPhone = {newPhone}
+        handlePhoneChange = {handlePhoneChange}
+      />
+
+      <h3>Numbers</h3>
+      <PersonForm/>
       {persons.map(person =>
         <Name key={person.id} name={person} />
       )}
