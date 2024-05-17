@@ -41,18 +41,6 @@ const App = () => {
     }
   }
 
-
-  const addFilterPers = (event, name, number) => {
-    event.preventDefault()
-    const personObject = {
-      name: name,
-      id: filterPersons.length + 1,
-      number:number
-    }
-    console.log("personObject: ",personObject)
-    setFilterPersons(filterPersons.concat(personObject))
-  }
-
   const handleNameChange = (event) => {
     //console.log(event.target.value)
     setNewName(event.target.value)
