@@ -82,11 +82,6 @@ const App = () => {
       {persons.map(person =>
         <Name key={person.id} name={person} />
       )}
-
-      <h2>Filter</h2>
-      {filterPersons.map(person =>
-        <Name key={person.id} name={person} />
-      )}
     </div>
   )
 }
