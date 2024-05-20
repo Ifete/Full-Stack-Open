@@ -65,12 +65,17 @@ const App = () => {
     } else {
       const personObject = {
         name: newName,
-        id: persons.length + 1,
         number:newPhone
       }
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewPhone('')
+      axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        console.log(response)
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewPhone('')
+      })
+
     }
   }
 
@@ -111,7 +116,6 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <PersonForm/>
       {persons.map(person =>
         <Name key={person.id} name={person} />
       )}
