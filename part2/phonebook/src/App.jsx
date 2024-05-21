@@ -6,6 +6,7 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import personService from "./services/persons";
 import Notification from "./components/Notification";
+import ErrorNot from "./components/ErrorNot";
 import './index.css'
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
   const [newPhone, setNewPhone] = useState("");
   const [newFilter, setNewFilter] = useState("");
   const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll().then((response) => {
@@ -54,7 +56,15 @@ const App = () => {
           setTimeout(() => {
             setMessage(null)
           }, 4000)
-        })
+        }).catch((error) => {
+          setErrorMessage(
+            `Information of '${person.name}' has already been removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        });
+        
       }
     } else {
       const personObject = {
@@ -117,7 +127,12 @@ const App = () => {
           setPersons(removedPers);
         })
         .catch((error) => {
-          alert(`the person '${person.name}' was already deleted from server`);
+          setErrorMessage(
+            `Information of '${person.name}' has already been removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         });
     }
   };
@@ -126,6 +141,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={message} />
+      <ErrorNot message={errorMessage} />
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
