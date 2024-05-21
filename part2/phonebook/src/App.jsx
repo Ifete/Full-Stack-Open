@@ -16,16 +16,14 @@ const App = () => {
 
 
   useEffect(() => {
-    console.log('effect')
     personService
       .getAll()
       .then(response => {
-        console.log('promise fulfilled')
+       //console.log('promise fulfilled')
         setPersons(response.data)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
-
+    console.log(persons.length)
 
   const addData = (event) => {
     event.preventDefault()
@@ -81,11 +79,13 @@ const App = () => {
     let conf = window.confirm('Delete ' + name)
     console.log(person.id)
     if (conf) {
-      console.log("Confirm:", person.id)
+      //console.log("Confirm:", person.id)
       personService
         .remove(id)
         .then(returnedPerson => {
-          console.log('Remove')
+          let removedPers = persons.filter(el => el.name !== returnedPerson.name); 
+          console.log(removedPers)
+          setPersons(removedPers)          
         })
         .catch(error => {
           alert(
