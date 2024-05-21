@@ -76,12 +76,27 @@ const App = () => {
   }
 
   const removePerson = id => {
-    let conf = window.confirm('Delete ${name}')
-    console.log(id)
+    const person = persons.find(p => p.id === id)
+    let name = person.name;
+    let conf = window.confirm('Delete ' + name)
+    console.log(person.id)
     if (conf) {
-     personService.remove(id)
+      console.log("Confirm:", person.id)
+      personService
+        .remove(id)
+        .then(returnedPerson => {
+          console.log('Remove')
+        })
+        .catch(error => {
+          alert(
+            `the person '${person.name}' was already deleted from server`
+          )
+        })
+    }else{
+      console.log('Cancel')
     }
   }
+
 
   return (
     <div>
@@ -100,8 +115,12 @@ const App = () => {
 
       <h3>Numbers</h3>
       {persons.map(person =>
-          <Name key={person.id} name={person}/>
-      )}
+
+          <Name
+          key={person.id}
+          name={person}
+          removePerson={() => removePerson(person.id)} />
+    )}
     </div>
   )
 }
