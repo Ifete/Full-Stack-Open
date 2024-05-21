@@ -15,7 +15,7 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
 
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log('effect')
     personService
       .getAll()
@@ -40,16 +40,16 @@ const App = () => {
     } else {
       const personObject = {
         name: newName,
-        number:newPhone
+        number: newPhone
       }
       personService
-      .create(personObject)
-      .then(response => {
-        console.log(response)
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setNewPhone('')
-      })
+        .create(personObject)
+        .then(response => {
+          console.log(response)
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewPhone('')
+        })
 
     }
   }
@@ -75,24 +75,32 @@ const App = () => {
     }
   }
 
+  const removePerson = id => {
+    let conf = window.confirm('Delete ${name}')
+    console.log(id)
+    if (conf) {
+     personService.remove(id)
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter newFilter= {newFilter} handleFilterChange={handleFilterChange}/>
+      <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
 
       <PersonForm
-        addData = {addData}
-        newName = {newName}
-        handleNameChange = {handleNameChange}
-        newPhone = {newPhone}
-        handlePhoneChange = {handlePhoneChange}
+        addData={addData}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newPhone={newPhone}
+        handlePhoneChange={handlePhoneChange}
       />
 
       <h3>Numbers</h3>
       {persons.map(person =>
-        <Name key={person.id} name={person} />
+          <Name key={person.id} name={person}/>
       )}
     </div>
   )
