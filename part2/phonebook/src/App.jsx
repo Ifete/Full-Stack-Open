@@ -5,6 +5,8 @@ import Name from "./components/Name";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,6 +14,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newFilter, setNewFilter] = useState("");
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll().then((response) => {
@@ -32,7 +35,7 @@ const App = () => {
     if (existeNombre) {
       let conf = window.confirm(
         newName +
-          "is already added to phonebook, replace the old number with a new one?"
+          " is already added to phonebook, replace the old number with a new one?"
       );
       if (conf) {
         const person = persons.find((n) => n.name === newName);
@@ -45,6 +48,12 @@ const App = () => {
           setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
           setNewName("");
           setNewPhone("");
+          setMessage(
+            `Updated '${newName}'`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 4000)
         })
       }
     } else {
@@ -57,6 +66,12 @@ const App = () => {
         setPersons(persons.concat(response.data));
         setNewName("");
         setNewPhone("");
+        setMessage(
+          `Added '${newName}'`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 4000)
       });
     }
   };
@@ -110,6 +125,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
