@@ -29,15 +29,15 @@ function App() {
               response.data[i].name.common
                 .toUpperCase()
                 .includes(countSearch.toUpperCase())
-            ){
+            ) {
               //console.log('includes: ', response.data[i].name.common)
               paises.push(response.data[i])
             }
           }
-          if(paises.length==1){
+          if (paises.length == 1) {
             setOneCountry(paises)
             setCountry([])
-          }else if(paises.length>10){
+          } else if (paises.length > 10) {
             setCountry([])
             setOneCountry([])
             setMessage(
@@ -46,7 +46,7 @@ function App() {
             setTimeout(() => {
               setMessage(null)
             }, 4000)
-          }else{
+          } else {
             setCountry(paises)
             setOneCountry([])
           }
@@ -64,43 +64,56 @@ function App() {
     setCountSearch(name)
   }
 
+  const handleShow = (country) => {
+    console.log('click', country.name.common)
+    axios
+        .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${country.name.common}`)
+        .then(response => {
+          setOneCountry([response.data])
+          setCountry([])
+          setName('')}
+        )
+  }
+
   //console.log(countries.length)
   //console.log('oneCountry: ',oneCountry)
 
   return (
     <div>
-    <form onSubmit={onSearch}>
-      Country: <input value={name} onChange={handleChange} />
-      <button type="submit">find country</button>
-    </form>
-    <Notification message={message} />
-    <pre>
-      {countries.map((country) => (
-        <p key={country.tld.cca3}>{country.name.common}</p>
-      ))}
-    </pre>
-    <pre>
-      {oneCountry.map((country) => (
-        <div key={country.cca3}>
-          <h1>{country.name.common}</h1>
-          <p>capital {country.capital}</p>
-          <p>area {country.area}</p>
-          <h2>lenguages:</h2>
-          {
-          <ul>
-            {Object.values(country.languages).map(lang =>
-              <li key={lang}>
-                <span style={{fontWeight:'bold'}}>{lang}</span>
-              </li>
-            )}
-          </ul>}
-          <img style={{width : '100px', height : '80px'}} src={country.flags.svg}></img>
-        </div>
-      ))}
-    </pre>
+      <form onSubmit={onSearch}>
+        Country: <input value={name} onChange={handleChange} />
+        <button type="submit">find country</button>
+      </form>
+      <Notification message={message} />
+      <pre>
+        {countries.map((country) => (
+          <div key={country.tld.cca3}>
+            <p >{country.name.common} <button onClick={() => handleShow(country)}>show</button></p>
+          </div>
+        ))}
+      </pre>
+      <pre>
+        {oneCountry.map((country) => (
+          <div key={country.cca3}>
+            <h1>{country.name.common}</h1>
+            <p>capital {country.capital}</p>
+            <p>area {country.area}</p>
+            <h2>lenguages:</h2>
+            {
+              <ul>
+                {Object.values(country.languages).map(lang =>
+                  <li key={lang}>
+                    <span style={{ fontWeight: 'bold' }}>{lang}</span>
+                  </li>
+                )}
+              </ul>}
+            <img style={{ width: '100px', height: '80px' }} src={country.flags.svg}></img>
+          </div>
+        ))}
+      </pre>
 
 
-  </div>
+    </div>
   )
 }
 
