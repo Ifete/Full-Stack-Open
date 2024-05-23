@@ -9,8 +9,11 @@ function App() {
   const [countries, setCountry] = useState([])
   const [oneCountry, setOneCountry] = useState([])
   const [countSearch, setCountSearch] = useState(null)
-
   const [message, setMessage] = useState(null)
+  const [weather, setWeather] = useState([])
+
+  const api_key = import.meta.env.VITE_SOME_KEY
+ //($env:VITE_SOME_KEY="api") -and (npm run dev)
 
   useEffect(() => {
     console.log('effect run, countSearch is now', countSearch)
@@ -37,6 +40,18 @@ function App() {
           if (paises.length == 1) {
             setOneCountry(paises)
             setCountry([])
+            console.log(paises[0].name.common)
+            let lat = paises[0].capitalInfo.latlng[0];
+            let long = paises[0].capitalInfo.latlng[1];
+            //console.log('latitud: ', lat)
+            console.log('api: ', api_key)
+            axios
+              .get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${api_key}`)
+              .then(response => {
+                setWeather([response.data])
+              })
+
+
           } else if (paises.length > 10) {
             setCountry([])
             setOneCountry([])
@@ -54,6 +69,7 @@ function App() {
     }
   }, [countSearch])
 
+
   const handleChange = (event) => {
     //console.log('name', event.target.value)
     setName(event.target.value)
@@ -67,17 +83,26 @@ function App() {
   const handleShow = (country) => {
     console.log('click', country.name.common)
     axios
-        .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${country.name.common}`)
-        .then(response => {
-          setOneCountry([response.data])
-          setCountry([])
-          setName('')}
-        )
+      .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${country.name.common}`)
+      .then(response => {
+        setOneCountry([response.data])
+        setCountry([])
+        setName('')
+        let lat = response.data.capitalInfo.latlng[0];
+        let long = response.data.capitalInfo.latlng[1];
+        //console.log('latitud: ',response.data.capitalInfo.latlng[0])
+        axios
+          .get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${api_key}`)
+          .then(response => {
+            setWeather([response.data])
+          })
+      }
+      )
   }
 
   //console.log(countries.length)
   //console.log('oneCountry: ',oneCountry)
-
+  //console.log(weather)
   return (
     <div>
       <form onSubmit={onSearch}>
@@ -110,11 +135,21 @@ function App() {
             <img style={{ width: '100px', height: '80px' }} src={country.flags.svg}></img>
           </div>
         ))}
+
+        {weather.map((country) => (
+          <div key={country.id}>
+            <h1>Weather in {country.name}</h1>
+            <p>temperature {country.main.temp} Celsius</p>
+            <img src={`https://openweathermap.org/img/wn/${country.weather[0].icon}@2x.png`}></img>
+            <p>wind {country.wind.speed} m/s</p>
+          </div>
+        ))}
       </pre>
 
 
     </div>
   )
 }
+
 
 export default App
